@@ -7,7 +7,12 @@ export const getContact = (req, res) => {
 };
 
 export const createContact = (req, res) => {
-  console.log("body:", req.body);
+  // console.log("body:", req.body);
+  const { name, city, mobileNo } = req.body;
+  if (!name || !city || !mobileNo) {
+    res.status(400);
+    throw new Error("All contact details needs to be filled");
+  }
   res.status(200).json({ message: "contact created!!" });
 };
 
