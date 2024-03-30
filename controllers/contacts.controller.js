@@ -1,27 +1,59 @@
-export const getAllContacts = (req, res) => {
-  res.status(200).json({ message: "All contacts fetched!!" });
-};
+import asyncHandler from "express-async-handler";
+import Contact from "../models/contact.model.js";
 
-export const getContact = (req, res) => {
-  res.status(200).json({ message: `Contact with id: ${req.params.id}` });
-};
+export const getAllContacts = asyncHandler(async (req, res) => {
+  const contact = await Contact.find();
+  res.status(200).json(contact);
+});
 
-export const createContact = (req, res) => {
+export const getContact = asyncHandler(async (req, res) => {
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact Not found!!");
+  }
+  res.status(200).json(contact);
+});
+
+export const createContact = asyncHandler(async (req, res) => {
   // console.log("body:", req.body);
-  const { name, city, mobileNo } = req.body;
-  if (!name || !city || !mobileNo) {
+  const { name, email, phone } = req.body;
+  if (!name || !email || !phone) {
     res.status(400);
     throw new Error("All contact details needs to be filled");
   }
-  res.status(200).json({ message: "contact created!!" });
-};
+  const contact = await Contact.create({
+    name,
+    email,
+    phone,
+  });
 
-export const updateContact = (req, res) => {
-  res
-    .status(200)
-    .json({ message: `Contact updated for the id ${req.params.id}` });
-};
+  res.status(200).json(contact);
+});
 
-export const deleteContact = (req, res) => {
-  res.status(200).json({ message: `contact deleted for id: ${req.params.id}` });
-};
+export const updateContact = asyncHandler(async (req, res) => {
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact not found!");
+  }
+
+  const updatedContact = await Contact.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+
+  res.status(200).json(updatedContact);
+});
+
+export const deleteContact = asyncHandler(async (req, res) => {
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact not found!");
+  }
+  await Contact.findByIdAndDelete(req.params.id);
+
+  res.status(200).json(contact);
+});
