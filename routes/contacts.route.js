@@ -9,14 +9,14 @@ import {
 
 const route = express();
 
-route.get("/api/contacts", getAllContacts);
+route.get("/", getAllContacts);
 
-route.get("/api/contacts/:id", getContact);
+route.get("/:id", getContact);
 
-route.post("/api/contacts", createContact);
+route.post("/", createContact);
 
-route.put("/api/contacts/:id", updateContact);
+route.put("/:id", updateContact);
 
-route.delete("/api/contacts/:id", deleteContact);
+route.delete("/:id", deleteContact);
 
 export default route;
