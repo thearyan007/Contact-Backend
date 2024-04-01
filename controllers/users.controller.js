@@ -58,13 +58,11 @@ export const login = asyncHandler(async (req, res) => {
       process.env.SECERT_ASSCESS_TOKEN,
       { expiresIn: "10m" }
     );
-    res
-      .status(200)
-      .json({
-        _id: user._id,
-        userName: user.username,
-        accessToken: accessToken,
-      });
+    res.status(200).json({
+      _id: user._id,
+      userName: user.username,
+      accessToken: accessToken,
+    });
   } else {
     res.status(401);
     throw new Error("Username or password not Valid!!");
@@ -72,13 +70,5 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const current = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.find({
-    username,
-    password,
-  });
-  if (!user) {
-    res.status(401).json({ message: "Wrong Username or password!" });
-  }
-  res.status(200).json(user);
+  res.status(200).json(req.user);
 });
