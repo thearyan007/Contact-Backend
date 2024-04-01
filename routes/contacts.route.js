@@ -6,8 +6,11 @@ import {
   getContact,
   updateContact,
 } from "../controllers/contacts.controller.js";
+import { validateToken } from "../middleare/validateTokenHandler.js";
 
 const route = express();
+
+route.use(validateToken);
 
 route.get("/", getAllContacts);
 
